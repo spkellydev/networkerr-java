@@ -1,6 +1,7 @@
-package com.networkerr;
+package com.networkerr.app;
 
-import com.networkerr.handlers.NetworkerrServerHandler;
+import com.networkerr.app.handlers.NetworkerrServerHandler;
+import com.networkerr.core.routers.AnnotationRouter;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -10,7 +11,6 @@ import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
-import io.netty.handler.codec.http2.Http2FrameLogger;
 import io.netty.handler.logging.LogLevel;
 import io.netty.handler.logging.LoggingHandler;
 import io.netty.handler.timeout.IdleStateHandler;
@@ -18,6 +18,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class Server {
     public static void main(String[] args) {
         System.out.println("Server running on port 8080");
+        new AnnotationRouter().findAnnotation();
         new Server().run();
     }
 

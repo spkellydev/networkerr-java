@@ -1,5 +1,6 @@
-package com.networkerr.handlers;
+package com.networkerr.app.handlers;
 
+import com.networkerr.core.annotations.HttpEndpoint;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -9,6 +10,11 @@ public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHtt
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         System.out.println("Server hit");
+        getThis(ctx);
+    }
+
+    @HttpEndpoint(route = "/api", method = "GET", statusCode = 200)
+    public void getThis(ChannelHandlerContext ctx) {
         ByteBuf responseBytes = ctx.alloc().buffer();
         responseBytes.writeBytes("Hello World".getBytes());
         FullHttpResponse response = new DefaultFullHttpResponse(HttpVersion.HTTP_1_1, HttpResponseStatus.ACCEPTED, responseBytes);
