@@ -18,7 +18,7 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class Server {
     public static void main(String[] args) {
         System.out.println("Server running on port 8080");
-        new AnnotationRouter().findAnnotation();
+        new AnnotationRouter().findAnnotation().getRouteMapFromMethods();
         new Server().run();
     }
 
@@ -29,7 +29,7 @@ public class Server {
         try {
             ServerBootstrap b = new ServerBootstrap();
             b.group(bossGroup, workerGroup)
-                    .handler(new LoggingHandler(LogLevel.INFO))
+//                    .handler(new LoggingHandler(LogLevel.INFO))
                     .channel(NioServerSocketChannel.class)
                     .childHandler(new ChannelInitializer<SocketChannel>() {
                         public void initChannel(SocketChannel ch) throws Exception {

@@ -7,6 +7,9 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 
 public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+    private String route;
+    private String method;
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         System.out.println("Server hit");
@@ -22,5 +25,10 @@ public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHtt
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         ctx.writeAndFlush(response);
+    }
+
+    @HttpEndpoint(route="/hammer", method = "POST", statusCode = 304)
+    public void lalala() {
+        System.out.println("hammer");
     }
 }
