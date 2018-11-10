@@ -18,7 +18,6 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class Server {
     public static void main(String[] args) {
         System.out.println("Server running on port 8080");
-        new AnnotationRouter().findAnnotation().getRouteMapFromMethods();
         new Server().run();
     }
 

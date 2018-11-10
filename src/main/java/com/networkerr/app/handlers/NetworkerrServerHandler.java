@@ -26,9 +26,4 @@ public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHtt
         response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         ctx.writeAndFlush(response);
     }
-
-    @HttpEndpoint(route="/hammer", method = "POST", statusCode = 304)
-    public void lalala() {
-        System.out.println("hammer");
-    }
 }

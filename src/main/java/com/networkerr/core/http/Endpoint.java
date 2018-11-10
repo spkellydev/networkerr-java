@@ -24,4 +24,8 @@ public class Endpoint {
     public String toString() {
         return this.route + " " + this.method + " " + this.statusCode + " " + this.clazz + " " + this.m;
     }
+
+    public String getMethod() {
+        return this.method;
+    }
 }
