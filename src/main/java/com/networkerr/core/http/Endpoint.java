@@ -28,4 +28,8 @@ public class Endpoint {
     public String getMethod() {
         return this.method;
     }
+
+    public int getCode() {
+        return this.statusCode;
+    }
 }

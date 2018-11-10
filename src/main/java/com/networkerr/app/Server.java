@@ -1,7 +1,7 @@
 package com.networkerr.app;
 
 import com.networkerr.app.handlers.NetworkerrServerHandler;
-import com.networkerr.core.routers.AnnotationRouter;
+import com.networkerr.core.routers.Router;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -18,10 +18,11 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class Server {
     public static void main(String[] args) {
         System.out.println("Server running on port 8080");
-        new Server().run();
+        Router router = new Router();
+        new Server().run(router);
     }
 
-    public void run() {
+    public void run(Router router) {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -36,7 +37,7 @@ public class Server {
                                 .addFirst("idleStateHandler", new IdleStateHandler(60, 30, 0))
                                 .addLast(new HttpServerCodec())
                                 .addLast("aggregator", new HttpObjectAggregator(Short.MAX_VALUE))
-                                .addLast(new NetworkerrServerHandler());
+                                .addLast(new NetworkerrServerHandler(router));
                         }
                     });
             // Bind and accept incoming connections;

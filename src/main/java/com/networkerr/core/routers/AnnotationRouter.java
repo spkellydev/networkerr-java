@@ -14,6 +14,10 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 class AnnotationRouter {
+    public static final FallbackEndpoint $404 = new FallbackEndpoint("/404", "GET", 404);
+    public static final FallbackEndpoint $500 = new FallbackEndpoint("/500", "GET", 500);
+    public static final FallbackEndpoint $302 = new FallbackEndpoint("/302", "GET", 302);
+
     private Set<Method> methods;
     private ArrayList<Endpoint> endpoints = new ArrayList<>();
     protected AnnotationRouter findAnnotation() {
@@ -48,16 +52,22 @@ class AnnotationRouter {
         }
     }
 
-    protected Endpoint queryEndpoints(String route) {
-        final Endpoint[] found = {null};
+    protected Endpoint queryEndpoints(String route, String method) {
+        Endpoint[] found = {null};
         this.endpoints.forEach(endpoint -> {
             if(route.equals(endpoint.getRoute())) {
                 found[0] = endpoint;
             }
         });
         if (found[0] != null) {
-            return found[0];
+            if(method.equals(found[0].getMethod())) {
+                return found[0];
+            }
+            if(found[0].getCode() == 302) {
+                return $302;
+            }
+            return $500;
         }
-        return FallbackEndpoint.getInstance(404);
+        return $404;
     }
 }
