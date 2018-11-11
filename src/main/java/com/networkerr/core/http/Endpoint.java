@@ -32,4 +32,12 @@ public class Endpoint {
     public int getCode() {
         return this.statusCode;
     }
+
+    public String getClazz() {
+        return this.clazz.replace("class ", "");
+    }
+
+    public String getM() {
+        return this.m;
+    }
 }

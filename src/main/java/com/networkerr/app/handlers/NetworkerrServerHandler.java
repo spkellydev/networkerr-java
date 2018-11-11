@@ -8,6 +8,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 
+import java.lang.reflect.Method;
+
 public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
     private String route;
     private String method;
@@ -21,8 +23,10 @@ public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHtt
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         System.out.println("Server hit");
         Endpoint endpoint = this.router.getRoute(msg.uri(), msg.method().toString());
-        System.out.println(endpoint.toString());
-        getThis(ctx);
+        Class<?> c = Class.forName(endpoint.getClazz());
+        Object cl = c.getConstructor(Router.class).newInstance(this.router);
+        Method refl = (cl.getClass()).getMethod(endpoint.getM(), ChannelHandlerContext.class);
+        refl.invoke(cl, ctx);
     }
 
     @HttpEndpoint(route = "/api", method = "GET", statusCode = 200)
