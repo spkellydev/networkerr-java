@@ -1,7 +1,6 @@
 package com.networkerr.core.routers;
 
-import com.networkerr.core.http.Endpoint;
-import com.networkerr.core.http.FallbackEndpoint;
+import com.networkerr.core.http.DerivedEndpoint;
 
 public class Router extends AnnotationRouter {
 
@@ -9,7 +8,7 @@ public class Router extends AnnotationRouter {
         this.findAnnotation().getRouteMapFromMethods();
     }
 
-    public Endpoint getRoute(String route, String method) {
+    public DerivedEndpoint getRoute(String route, String method) {
         return this.queryEndpoints(route, method);
     }
 }

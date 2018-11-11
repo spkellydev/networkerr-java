@@ -1,20 +1,20 @@
 package com.networkerr.core.http;
 
-public class Endpoint {
+public class DerivedEndpoint {
     String route = null;
     String method = null;
     int statusCode = 0;
     String clazz = null;
-    String m = null;
+    String handlerMethod = null;
 
-    public Endpoint(){}
+    public DerivedEndpoint(){}
 
-    public Endpoint(String route, String method, int statusCode, String clazz, String m) {
+    public DerivedEndpoint(String route, String method, int statusCode, String clazz, String handlerMethod) {
         this.route = route;
         this.method = method;
         this.statusCode = statusCode;
         this.clazz = clazz;
-        this.m = m;
+        this.handlerMethod = handlerMethod;
     }
 
     public String getRoute() {
@@ -22,7 +22,7 @@ public class Endpoint {
     }
 
     public String toString() {
-        return this.route + " " + this.method + " " + this.statusCode + " " + this.clazz + " " + this.m;
+        return this.route + " " + this.method + " " + this.statusCode + " " + this.clazz + " " + this.handlerMethod;
     }
 
     public String getMethod() {
@@ -37,7 +37,7 @@ public class Endpoint {
         return this.clazz.replace("class ", "");
     }
 
-    public String getM() {
-        return this.m;
+    public String getHandlerMethod() {
+        return this.handlerMethod;
     }
 }

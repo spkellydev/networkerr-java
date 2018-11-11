@@ -1,8 +1,8 @@
 package com.networkerr.core.routers;
 
 import com.networkerr.core.annotations.HttpEndpoint;
-import com.networkerr.core.http.Endpoint;
-import com.networkerr.core.http.FallbackEndpoint;
+import com.networkerr.core.http.DerivedEndpoint;
+import com.networkerr.core.http.FallbackDerivedEndpoint;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
@@ -14,12 +14,12 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 class AnnotationRouter {
-    public static final FallbackEndpoint $404 = new FallbackEndpoint("/404", "GET", 404);
-    public static final FallbackEndpoint $500 = new FallbackEndpoint("/500", "GET", 500);
-    public static final FallbackEndpoint $302 = new FallbackEndpoint("/302", "GET", 302);
+    public static final FallbackDerivedEndpoint $404 = new FallbackDerivedEndpoint("/404", "GET", 404);
+    public static final FallbackDerivedEndpoint $500 = new FallbackDerivedEndpoint("/500", "GET", 500);
+    public static final FallbackDerivedEndpoint $302 = new FallbackDerivedEndpoint("/302", "GET", 302);
 
     private Set<Method> methods;
-    private ArrayList<Endpoint> endpoints = new ArrayList<>();
+    private ArrayList<DerivedEndpoint> endpoints = new ArrayList<>();
     protected AnnotationRouter findAnnotation() {
         Reflections reflections = new Reflections(
           new ConfigurationBuilder().setUrls(
@@ -45,15 +45,15 @@ class AnnotationRouter {
            String route = (String) anno.annotationType().getMethod("route").invoke(anno);
            String httpMethod = (String) anno.annotationType().getMethod("method").invoke(anno);
            int code = (int) anno.annotationType().getMethod("statusCode").invoke(anno);
-           Endpoint endpoint = new Endpoint(route, httpMethod, code, clazz, m);
-           this.endpoints.add(endpoint);
+           DerivedEndpoint derivedEndpoint = new DerivedEndpoint(route, httpMethod, code, clazz, m);
+           this.endpoints.add(derivedEndpoint);
         } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
             e.printStackTrace();
         }
     }
 
-    protected Endpoint queryEndpoints(String route, String method) {
-        Endpoint[] found = {null};
+    protected DerivedEndpoint queryEndpoints(String route, String method) {
+        DerivedEndpoint[] found = {null};
         this.endpoints.forEach(endpoint -> {
             if(route.equals(endpoint.getRoute())) {
                 found[0] = endpoint;

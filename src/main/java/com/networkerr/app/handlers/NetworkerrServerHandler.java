@@ -1,18 +1,14 @@
 package com.networkerr.app.handlers;
 
 import com.networkerr.core.annotations.HttpEndpoint;
-import com.networkerr.core.http.Endpoint;
+import com.networkerr.core.http.Handler;
 import com.networkerr.core.routers.Router;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 
-import java.lang.reflect.Method;
-
 public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
-    private String route;
-    private String method;
     private Router router;
 
     public NetworkerrServerHandler(Router router) {
@@ -20,13 +16,9 @@ public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHtt
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
-        System.out.println("Server hit");
-        Endpoint endpoint = this.router.getRoute(msg.uri(), msg.method().toString());
-        Class<?> c = Class.forName(endpoint.getClazz());
-        Object cl = c.getConstructor(Router.class).newInstance(this.router);
-        Method refl = (cl.getClass()).getMethod(endpoint.getM(), ChannelHandlerContext.class);
-        refl.invoke(cl, ctx);
+    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) {
+        Handler handler = new Handler(router, msg, ctx);
+        handler.handleIncomingRequest();
     }
 
     @HttpEndpoint(route = "/api", method = "GET", statusCode = 200)
