@@ -1,14 +1,7 @@
 package com.networkerr.core.database;
 
-public enum SQLFlags {
-    NOT_NULL("NOT NULL"), AUTO_INCREMENT("AUTO_INCREMENT"), PRIMARY_KEY("PRIMARY KEY");
-
-    private String field;
-    private SQLFlags() {}
-    private SQLFlags(String field) { this.field = field; }
-
-    @Override
-    public String toString() {
-        return this.field;
-    }
+public class SQLFlags {
+    public static final String NOT_NULL = "NOT NULL";
+    public static final String AUTO_INCREMENT = "AUTO_INCREMENT";
+    public static final String PRIMARY_KEY = "PRIMARY KEY";
 }

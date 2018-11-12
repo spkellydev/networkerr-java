@@ -4,7 +4,7 @@ public class MySqlWriter {
     private String pk = null;    // primary key
     private String fk = null;    // foreign key
     private StringBuilder statementBuilder = new StringBuilder();
-    public String getTableStatement() {
+    public String getStatement() {
         return this.statementBuilder.toString();
     }
 
@@ -16,7 +16,6 @@ public class MySqlWriter {
     public MySqlWriter createTableEnd() {
         boolean fkExists = this.fk != null;
         if(this.pk != null) {
-            System.out.println(this.pk);
             this.statementBuilder.append(", ");
             this.statementBuilder.append(this.pk);
         }
@@ -28,7 +27,7 @@ public class MySqlWriter {
         return this;
     }
 
-    public MySqlWriter createTableColumn(String columnName, boolean isLast, SQLTypes type, SQLFlags...flags) {
+    public MySqlWriter createTableColumn(String columnName, boolean isLast, SQLTypes type, String... flags) {
         StringBuilder columnBuilder;
         columnBuilder = new StringBuilder();
         columnBuilder.append(columnName).append(" ").append(type.toString());

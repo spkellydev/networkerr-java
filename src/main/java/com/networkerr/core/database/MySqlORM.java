@@ -6,10 +6,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MySQLORM {
-    private static MySQLORM instance = new MySQLORM();
+public class MySqlORM {
+    private static MySqlORM instance = new MySqlORM();
     private Connection connection = null;
-    private MySQLORM() {
+    private MySqlORM() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
@@ -17,7 +17,7 @@ public class MySQLORM {
         }
     }
 
-    public static MySQLORM getInstance() {
+    public static MySqlORM getInstance() {
         return instance;
     }
 
@@ -32,7 +32,7 @@ public class MySQLORM {
                     this.connect(database, user, password);
                 } catch (IOException e1) {
                     System.out.println("Could not create database automatically");
-                    System.out.println("Check that " + database + " exists in your database");
+                    System.out.println("Check that " + database + " exists in your server");
                 }
             }
         }
@@ -48,8 +48,13 @@ public class MySQLORM {
             }
             try {
                 assert statement != null;
+                System.out.println("Executing to MySQL...");
+                System.out.println(sql);
                 statement.execute(sql);
             } catch (SQLException e) {
+                if(e.getErrorCode() == 1215) {
+                    System.out.println("Foreign key can't be created, it doesn't seem the associated table is created");
+                }
                 e.printStackTrace();
             }
         }
