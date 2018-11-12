@@ -1,32 +1,23 @@
 package com.networkerr.core.routers;
 
+import com.networkerr.core.annotations.AnnotationsScanner;
 import com.networkerr.core.annotations.HttpEndpoint;
 import com.networkerr.core.http.DerivedEndpoint;
 import com.networkerr.core.http.FallbackDerivedEndpoint;
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-class AnnotationRouter {
+class AnnotationRouter extends AnnotationsScanner {
     public static final FallbackDerivedEndpoint $404 = new FallbackDerivedEndpoint("/404", "GET", 404);
     public static final FallbackDerivedEndpoint $500 = new FallbackDerivedEndpoint("/500", "GET", 500);
     public static final FallbackDerivedEndpoint $302 = new FallbackDerivedEndpoint("/302", "GET", 302);
 
     private Set<Method> methods;
     private ArrayList<DerivedEndpoint> endpoints = new ArrayList<>();
-    protected AnnotationRouter findAnnotation() {
-        Reflections reflections = new Reflections(
-          new ConfigurationBuilder().setUrls(
-                  ClasspathHelper.forPackage("com.networkerr.app")
-          ).setScanners(new MethodAnnotationsScanner())
-        );
-        this.methods = reflections.getMethodsAnnotatedWith(HttpEndpoint.class);
+    protected AnnotationRouter scanAnnotations() {
+        this.methods = this.findAnnotation("com.networkerr.app", HttpEndpoint.class);
         return this;
     }
 

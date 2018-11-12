@@ -4,7 +4,7 @@ import com.networkerr.core.http.DerivedEndpoint;
 
 public class Router extends AnnotationRouter {
     public Router() {
-        this.findAnnotation().getRouteMapFromMethods();
+        this.scanAnnotations().getRouteMapFromMethods();
     }
 
     public DerivedEndpoint getRoute(String route, String method) {
