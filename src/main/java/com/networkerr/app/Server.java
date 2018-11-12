@@ -16,11 +16,10 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class Server {
     public static void main(String[] args) {
         System.out.println("Server running on port 8080");
-        Router router = new Router();
-        new Server().run(router);
+        new Server().run();
     }
 
-    public void run(Router router) {
+    public void run() {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
@@ -35,7 +34,7 @@ public class Server {
                                 .addFirst("idleStateHandler", new IdleStateHandler(60, 30, 0))
                                 .addLast(new HttpServerCodec())
                                 .addLast("aggregator", new HttpObjectAggregator(Short.MAX_VALUE))
-                                .addLast(new NetworkerrServerHandler(router));
+                                .addLast(new NetworkerrServerHandler());
                         }
                     });
             // Bind and accept incoming connections;

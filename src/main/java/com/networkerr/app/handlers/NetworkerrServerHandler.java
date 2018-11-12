@@ -1,6 +1,7 @@
 package com.networkerr.app.handlers;
 
 import com.networkerr.core.annotations.HttpEndpoint;
+import com.networkerr.core.http.AnnotationHandlerUtils;
 import com.networkerr.core.http.Handler;
 import com.networkerr.core.routers.Router;
 import io.netty.buffer.ByteBuf;
@@ -8,17 +9,11 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.*;
 
-public class NetworkerrServerHandler extends SimpleChannelInboundHandler<FullHttpRequest> {
+public class NetworkerrServerHandler extends Handler {
     private Router router;
 
-    public NetworkerrServerHandler(Router router) {
-        this.router = router;
-    }
-
-    @Override
-    protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) {
-        Handler handler = new Handler(router, msg, ctx);
-        handler.handleIncomingRequest();
+    public NetworkerrServerHandler() {
+        super();
     }
 
     @HttpEndpoint(route = "/api", method = "GET", statusCode = 200)
