@@ -1,7 +1,7 @@
 package com.networkerr.app;
 
 import com.networkerr.app.handlers.NetworkerrServerHandler;
-import com.networkerr.core.routers.Router;
+import com.networkerr.core.database.*;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -15,7 +15,20 @@ import io.netty.handler.timeout.IdleStateHandler;
 
 public class Server {
     public static void main(String[] args) {
-        System.out.println("Server running on port 8080");
+        System.out.println("Database connected");
+        MySQLORM db = MySQLORM.getInstance();
+        db.connect("networkerr", "root", "");
+        MySqlWriter writer = new MySqlWriter();
+        String tableSql = writer.createTableBegin("companies")
+                .createTableColumn("CompanyId", false, SQLTypes.INTEGER, SQLFlags.NOT_NULL, SQLFlags.AUTO_INCREMENT, SQLFlags.PRIMARY_KEY)
+                .createTableColumn("CompanyDomain", false, SQLTypes.VARCHAR32)
+                .createTableColumn("CompanyName", false, SQLTypes.VARCHAR64)
+                .createTableColumn("CompanyProfileId", true, SQLTypes.INTEGER, SQLFlags.NOT_NULL)
+                .createForeignKey("CompanyProfileId", "CompanyProfiles", "CompanyProfileId", SQLForeignKeyFlags.DELETE_CASCADE)
+                .createTableEnd()
+                .getTableStatement();
+        db.execute(tableSql);
+        System.out.println(tableSql);
         new Server().run();
     }
 
