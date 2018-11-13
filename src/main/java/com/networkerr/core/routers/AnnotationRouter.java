@@ -16,12 +16,10 @@ class AnnotationRouter extends AnnotationsScanner {
 
     private Set<Method> methods;
     private ArrayList<DerivedEndpoint> endpoints = new ArrayList<>();
-    protected AnnotationRouter scanAnnotations() {
-        this.methods = this.findAnnotation("com.networkerr.app", HttpEndpoint.class);
-        return this;
-    }
 
-    protected void getRouteMapFromMethods() {
+    protected void getMapFromMethods() {
+        this.findAnnotations("com.networkerr.app", HttpEndpoint.class);
+        this.methods = this.getMethods(HttpEndpoint.class);
         this.methods.forEach(method -> {
             for (Annotation anno: method.getAnnotations()) {
                 if (anno.annotationType().equals(HttpEndpoint.class)) {
