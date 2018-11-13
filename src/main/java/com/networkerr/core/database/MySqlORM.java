@@ -6,12 +6,13 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class MySqlORM {
+public class MySqlORM extends AnnotationSchema {
     private static MySqlORM instance = new MySqlORM();
     private Connection connection = null;
     private MySqlORM() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
+            this.getMapFromMethods();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

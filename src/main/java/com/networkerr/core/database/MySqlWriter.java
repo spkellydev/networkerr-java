@@ -1,5 +1,7 @@
 package com.networkerr.core.database;
 
+import java.util.ArrayList;
+
 public class MySqlWriter {
     private String pk = null;    // primary key
     private String fk = null;    // foreign key
@@ -7,9 +9,10 @@ public class MySqlWriter {
     public String getStatement() {
         return this.statementBuilder.toString();
     }
+    private StringBuilder tables = new StringBuilder();
 
     public MySqlWriter createTableBegin(String tableName) {
-        this.statementBuilder.append("CREATE TABLE").append(" ").append(tableName).append("(");
+        this.statementBuilder.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append("(");
         return this;
     }
 
@@ -79,5 +82,13 @@ public class MySqlWriter {
         }
         this.fk = fkey.toString();
         return this;
+    }
+
+    public void addToTables(String tableQuery) {
+        tables.append(tableQuery);
+    }
+
+    public String getTableQuery() {
+        return tables.toString();
     }
 }
