@@ -16,19 +16,8 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class Server {
     public static void main(String[] args) {
         System.out.println("Database connected");
-        MySQLORM db = MySQLORM.getInstance();
+        MySqlORM db = MySqlORM.getInstance();
         db.connect("networkerr", "root", "");
-        MySqlWriter writer = new MySqlWriter();
-        String tableSql = writer.createTableBegin("companies")
-                .createTableColumn("CompanyId", false, SQLTypes.INTEGER, SQLFlags.NOT_NULL, SQLFlags.AUTO_INCREMENT, SQLFlags.PRIMARY_KEY)
-                .createTableColumn("CompanyDomain", false, SQLTypes.VARCHAR32)
-                .createTableColumn("CompanyName", false, SQLTypes.VARCHAR64)
-                .createTableColumn("CompanyProfileId", true, SQLTypes.INTEGER, SQLFlags.NOT_NULL)
-                .createForeignKey("CompanyProfileId", "CompanyProfiles", "CompanyProfileId", SQLForeignKeyFlags.DELETE_CASCADE)
-                .createTableEnd()
-                .getTableStatement();
-        db.execute(tableSql);
-        System.out.println(tableSql);
         new Server().run();
     }
 
