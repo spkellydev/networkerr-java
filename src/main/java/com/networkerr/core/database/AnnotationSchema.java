@@ -11,6 +11,7 @@ import java.util.Set;
 
 public class AnnotationSchema extends AnnotationsScanner {
     private Set types;
+    private static String seed;
 
     @Override
     protected void getMapFromMethods() {
@@ -52,5 +53,14 @@ public class AnnotationSchema extends AnnotationsScanner {
                 }
             }
         }
+        this.setSeed(writer.getTableQuery());
+    }
+
+    protected String getSeed() {
+        return seed;
+    }
+
+    private void setSeed(String seed) {
+        AnnotationSchema.seed = seed;
     }
 }

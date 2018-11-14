@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.TimeUnit;
 
 public class MySqlORM extends AnnotationSchema {
     private static MySqlORM instance = new MySqlORM();
@@ -13,6 +14,7 @@ public class MySqlORM extends AnnotationSchema {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.getMapFromMethods();
+            this.goRaw("root", "", "networkerr", this.getSeed());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -58,6 +60,20 @@ public class MySqlORM extends AnnotationSchema {
                 }
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void goRaw(String user, String password, String database, String query) {
+        Runtime rt = Runtime.getRuntime();
+        System.out.println("going raw");
+        System.out.println(query);
+        try {
+            final String sql = String.format("mysql -u %s --password=\"%s\" -e\"create database if not exists %s; use %s; %s\"",
+                    user, password, database, database, query);
+            System.out.println(String.format("Executing Annotation Seeder....\r\n %s", sql));
+            Process pr = rt.exec(sql);
+        } catch (IOException e1) {
+            System.out.println("Could not run automatically");
         }
     }
 }
