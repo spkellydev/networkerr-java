@@ -6,10 +6,16 @@ import com.networkerr.core.database.Model;
 import com.networkerr.core.database.SQLFlags;
 import com.networkerr.core.database.SQLTypes;
 
-@SqlSchemaTable(table="companies")
+@SqlSchemaTable(table="companies", references = "companyProfiles", foreignKey = "CompanyProfileId")
 public class CompanyModel extends Model {
-    @SqlSchemaColumn(column="Companies", dataType = SQLTypes.VARCHAR32, properties = {SQLFlags.PRIMARY_KEY, SQLFlags.NOT_NULL})
-    String name = "Companies";
+    @SqlSchemaColumn(column="id", dataType = SQLTypes.INTEGER, properties = {SQLFlags.PRIMARY_KEY, SQLFlags.NOT_NULL, SQLFlags.AUTO_INCREMENT})
+    private long id;
+    @SqlSchemaColumn(column = "CompanyDomain", dataType = SQLTypes.VARCHAR64)
+    private String domain;
+    @SqlSchemaColumn(column = "CompanyName", dataType = SQLTypes.VARCHAR128)
+    private String name;
+    @SqlSchemaColumn(column = "CompanyProfileId", dataType = SQLTypes.INTEGER, properties = {SQLFlags.NOT_NULL})
+    private long profileId;
     public CompanyModel() {
         String tableSql = this.createTableBegin("companies")
             .createTableColumn("CompanyId", false, SQLTypes.INTEGER, SQLFlags.NOT_NULL, SQLFlags.AUTO_INCREMENT, SQLFlags.PRIMARY_KEY)
@@ -18,6 +24,6 @@ public class CompanyModel extends Model {
             .createTableColumn("CompanyProfileId", true, SQLTypes.INTEGER, SQLFlags.NOT_NULL)
             .createTableEnd()
             .getStatement();
-        this.db.execute(tableSql);
+//        this.db.execute(tableSql);
     }
 }

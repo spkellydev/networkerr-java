@@ -5,11 +5,25 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.concurrent.TimeUnit;
 
+/**
+ * MySqlORM should contain logic for finding SQL annotations, executing SQL queries and connecting to the database.
+ * @author Sean Kelly
+ * @apiNote MySql command line interface is expected for seeding to work.
+ */
 public class MySqlORM extends AnnotationSchema {
+    /**
+     * Singleton instance for ORM
+     */
     private static MySqlORM instance = new MySqlORM();
+    /**
+     * MySQL Connection object
+     */
     private Connection connection = null;
+
+    /**
+     * Private constructor to generate the instance, find annotations at runtime start, and seed database with tables.
+     */
     private MySqlORM() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -63,6 +77,13 @@ public class MySqlORM extends AnnotationSchema {
         }
     }
 
+    /**
+     * Connect to the MySql database via the command line, and execute the table seeder.
+     * @param user
+     * @param password
+     * @param database
+     * @param query
+     */
     private void goRaw(String user, String password, String database, String query) {
         Runtime rt = Runtime.getRuntime();
         System.out.println("going raw");

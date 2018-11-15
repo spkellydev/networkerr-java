@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 public @interface MySqlSchema {
     String column();
     SQLTypes dataType();
-    String[] properties();
+    String[] properties() default "[unassigned]";
 }

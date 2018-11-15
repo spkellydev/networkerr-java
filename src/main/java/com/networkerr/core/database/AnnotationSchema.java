@@ -3,7 +3,6 @@ package com.networkerr.core.database;
 import com.networkerr.core.annotations.AnnotationsScanner;
 import com.networkerr.core.annotations.SqlSchemaColumn;
 import com.networkerr.core.annotations.SqlSchemaTable;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -20,6 +19,8 @@ public class AnnotationSchema extends AnnotationsScanner {
         Annotation[] modelAnnotations = this.getAnnotationsFromClassCollection(allModels, SqlSchemaTable.class);
         Annotation[] fieldAnnotations = this.getAnnotationsFromFields(allModels);
         String tableName = null;
+        String references = null;
+        String foreignKey = null;
         String columnName = null;
         SQLTypes dataType = null;
         String[] flags = null;
@@ -28,6 +29,8 @@ public class AnnotationSchema extends AnnotationsScanner {
            if(ann.annotationType().equals(SqlSchemaTable.class)) {
                try {
                    tableName = (String) ann.annotationType().getMethod("table").invoke(ann);
+                   references = (String) ann.annotationType().getMethod("references").invoke(ann);
+                   foreignKey = (String) ann.annotationType().getMethod("foreignKey").invoke(ann);
                    writer.createTableBegin(tableName);
                    System.out.println(tableName);
                } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {

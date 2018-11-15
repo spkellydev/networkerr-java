@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 public @interface SqlSchemaColumn {
     String column();
     SQLTypes dataType();
-    String[] properties();
+    String[] properties() default {};
 }

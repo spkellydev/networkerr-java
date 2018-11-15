@@ -1,7 +1,5 @@
 package com.networkerr.core.database;
 
-import java.util.ArrayList;
-
 public class MySqlWriter {
     private String pk = null;    // primary key
     private String fk = null;    // foreign key
@@ -39,7 +37,7 @@ public class MySqlWriter {
                 if(i == flags.length - 1) {
                     if(!flags[i].equals(SQLFlags.PRIMARY_KEY)) {
                         columnBuilder.append(" ");
-                        columnBuilder.append(flags[i].toString());
+                        columnBuilder.append(flags[i]);
                     } else if(!isLast) {
                         this.pk = flags[i] + " ("+columnName+")";
                         columnBuilder.append(",");
@@ -67,7 +65,7 @@ public class MySqlWriter {
         return this;
     }
 
-    public MySqlWriter createForeignKey(String columnName, String tableName, String tableCol, SQLForeignKeyFlags ...flags) {
+    public MySqlWriter createForeignKey(String columnName, String tableName, String tableCol, String... flags) {
         StringBuilder fkey = new StringBuilder();
         fkey.append("FOREIGN KEY (").append(columnName).append(")").append(" ")
                 .append(SQLForeignKeyFlags.REFERENCES).append(" ")

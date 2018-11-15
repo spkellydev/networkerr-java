@@ -9,4 +9,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SqlSchemaTable {
     String table();
+    String references() default "";
+    String foreignKey() default "";
 }
