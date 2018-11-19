@@ -8,6 +8,7 @@ import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,20 +50,22 @@ public abstract class AnnotationsScanner {
         return annotations;
     }
 
-    protected Annotation[] getAnnotationsFromFields(Collection<String> allModels) {
-        final Field[][] extended = {null};
-        final Annotation[][] annotations = {null};
+    protected Annotation[][] getAnnotationsFromFields(Collection<String> allModels) {
+        final Field[][] extended = new Field[allModels.size()][1];
+        final Annotation[][] annotations = new Annotation[allModels.size()][1];
+        AtomicInteger i = new AtomicInteger();
         allModels.forEach(model -> {
             try {
-                extended[0] = Class.forName(model).getDeclaredFields();
-                for(Field e : extended[0]) {
-                    annotations[0] = e.getDeclaredAnnotations();
+                extended[i.get()] = Class.forName(model).getDeclaredFields();
+                for(Field e : extended[i.get()]) {
+                    annotations[i.get()] = e.getDeclaredAnnotations();
                 }
+                i.incrementAndGet();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
         });
-        return annotations[0];
+        return annotations;
     }
 
     protected abstract void getMapFromMethods();
