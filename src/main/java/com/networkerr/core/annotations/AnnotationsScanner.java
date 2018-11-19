@@ -1,20 +1,20 @@
 package com.networkerr.core.annotations;
 
-import com.google.common.collect.Multimap;
-import com.networkerr.core.database.AnnotationSchema;
 import com.networkerr.core.database.Model;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * AnnotationsScanner should house the logic for finding annotations via the Reflections library API.
+ */
 public abstract class AnnotationsScanner {
     private Reflections reflections;
     protected void findAnnotations(String namespace, Class<? extends Annotation> clazz) {
@@ -34,16 +34,19 @@ public abstract class AnnotationsScanner {
         return reflectionss.getStore().get(SubTypesScanner.class).get(clazz.getName());
     }
 
-    protected Annotation[] getAnnotationsFromClassCollection(Collection<String> allClasses, Class<? extends Annotation> clazz) {
-        final Annotation[][] annotations = new Annotation[1][1];
+    protected Annotation[][] getAnnotationsFromClassCollection(Collection<String> allClasses, Class<? extends Annotation> clazz) {
+        final Annotation[][] annotations = new Annotation[allClasses.size()][1];
+        AtomicInteger i = new AtomicInteger();
+        int l = allClasses.size();
         allClasses.forEach(a -> {
            try {
-               annotations[0] = Class.forName(a).getDeclaredAnnotations();
+               annotations[i.get()] = Class.forName(a).getDeclaredAnnotations();
+               i.getAndIncrement();
            } catch (ClassNotFoundException e) {
                e.printStackTrace();
            }
        });
-        return annotations[0];
+        return annotations;
     }
 
     protected Annotation[] getAnnotationsFromFields(Collection<String> allModels) {
