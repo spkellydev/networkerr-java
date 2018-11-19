@@ -54,13 +54,16 @@ public abstract class AnnotationsScanner {
         final Field[][] extended = new Field[allModels.size()][1];
         final Annotation[][] annotations = new Annotation[allModels.size()][1];
         AtomicInteger i = new AtomicInteger();
+        AtomicInteger j = new AtomicInteger();
         allModels.forEach(model -> {
             try {
                 extended[i.get()] = Class.forName(model).getDeclaredFields();
                 for(Field e : extended[i.get()]) {
-                    annotations[i.get()] = e.getDeclaredAnnotations();
+                    annotations[j.get()] = e.getDeclaredAnnotations();
+                    System.out.println(Arrays.deepToString(annotations));
+                    i.incrementAndGet();
                 }
-                i.incrementAndGet();
+                j.incrementAndGet();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

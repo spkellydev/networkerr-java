@@ -23,4 +23,8 @@ public class Schema {
     public String getTableName() {
         return this.tableName;
     }
+
+    public Annotation[] getFields() {
+        return this.fields;
+    }
 }

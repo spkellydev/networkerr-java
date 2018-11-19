@@ -28,7 +28,7 @@ public class MySqlORM extends AnnotationSchema {
         try {
             Class.forName("com.mysql.jdbc.Driver");
             this.getMapFromMethods();
-            this.goRaw("root", "", "networkerr", this.getSeed());
+//            this.goRaw("root", "", "networkerr", this.getSeed());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }

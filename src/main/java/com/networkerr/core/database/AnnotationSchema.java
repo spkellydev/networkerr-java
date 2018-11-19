@@ -18,18 +18,14 @@ public class AnnotationSchema extends AnnotationsScanner {
     @Override
     protected void getMapFromMethods() {
         this.findAnnotations("com.networkerr.app", SqlSchemaColumn.class);
+        // Get all Models annotated with SqlSchemaTable
         Collection<String> allModels = this.getAllOfClass(Model.class);
-        System.out.println(Arrays.toString(allModels.toArray()));
         Annotation[][] modelAnnotations = this.getAnnotationsFromClassCollection(allModels, SqlSchemaTable.class);
+        // Get all Fields annotated
         Annotation[][] fieldAnnotations = this.getAnnotationsFromFields(allModels);
-        System.out.println(Arrays.deepToString(fieldAnnotations));
         String tableName = null;
         String references = null;
         String foreignKey = null;
-        String columnName = null;
-        SQLTypes dataType = null;
-        String[] flags = null;
-        MySqlWriter writer = new MySqlWriter();
         // create collection for all of the available tables
         int f = 0;
         Collection<Schema> tables = new ArrayList<>();
@@ -71,36 +67,45 @@ public class AnnotationSchema extends AnnotationsScanner {
             existingRef.forEach((Schema referencedSchema) -> {
                 // add tables to seed list which have a reference
                 tables.stream()
-                        .filter(table -> table.getTableName()
-                                .equals(referencedSchema.getTableName())
-                        ).forEach((tablesToSeed)::add);
+                        .filter(table -> table.getTableName().equals(referencedSchema.getTableName()))
+                        .forEach((tablesToSeed)::add);
                 // add non referenced tables
                 tables.stream()
-                        .filter(table -> !table.getTableName()
-                                .equals(referencedSchema.getTableName())
-                        ).forEach((tablesToSeed)::add);
+                        .filter(table -> !table.getTableName().equals(referencedSchema.getTableName()))
+                        .forEach((tablesToSeed)::add);
             });
         }
 
-        tablesToSeed.forEach(t -> System.out.println(t.toString()));
-
-//        for(int i = 0; i < fieldAnnotations.length; i++) {
-//            Annotation ann = fieldAnnotations[i][0];
-//            boolean isLast = i == fieldAnnotations.length - 1;
-//            if(ann.annotationType().equals(SqlSchemaColumn.class)) {
-//                try {
-//                    columnName = (String) ann.annotationType().getMethod("column").invoke(ann);
-//                    dataType = (SQLTypes) ann.annotationType().getMethod("dataType").invoke(ann);
-//                    flags = (String[]) ann.annotationType().getMethod("properties").invoke(ann);
-//                    writer.createTableColumn(columnName, isLast, dataType, flags);
-//                    writer.createTableEnd();
-//                    String sql = writer.getStatement();
-//                    writer.addToTables(sql);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }
+        final String[] columnName = {null};
+        final SQLTypes[] dataType = {null};
+        final String[][] flags = {null};
+        MySqlWriter writer = new MySqlWriter();
+        // create writable sql string based on sorted collection
+        tablesToSeed.forEach(table -> {
+            writer.createTableBegin(table.getTableName());
+            Annotation[] fields = table.getFields();
+            boolean isLast = false;
+            for(int i = 0; i < fields.length; i++) {
+                isLast = i == fields.length - 1;
+                Annotation ann = fields[i];
+                System.out.println(ann.toString());
+                if(ann.annotationType().equals(SqlSchemaColumn.class)) {
+                    try {
+                        columnName[0] = (String) ann.annotationType().getMethod("column").invoke(ann);
+                        dataType[0] = (SQLTypes) ann.annotationType().getMethod("dataType").invoke(ann);
+                        flags[0] = (String[]) ann.annotationType().getMethod("properties").invoke(ann);
+                        writer.createTableColumn(columnName[0], isLast, dataType[0], flags[0]);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            if (isLast) {
+                writer.createTableEnd();
+            }
+        });
+        String sql = writer.getStatement();
+        System.out.println(sql);
 //        this.setSeed(writer.getTableQuery());
     }
 

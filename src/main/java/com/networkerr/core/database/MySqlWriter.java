@@ -61,6 +61,7 @@ public class MySqlWriter {
                 columnBuilder.append(",");
             }
         }
+        System.out.println(columnBuilder.toString());
         this.statementBuilder.append(columnBuilder.toString().trim());
         return this;
     }
