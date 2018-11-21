@@ -2,6 +2,7 @@ package com.networkerr.core.http;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.http.*;
+import io.netty.util.CharsetUtil;
 
 import java.lang.reflect.Method;
 
@@ -21,12 +22,18 @@ public class Handler extends AnnotationHandlerUtils {
             DerivedEndpoint derivedEndpoint = this.deriveEndpoint();
             Object derivedHandler = deriveHandler(derivedEndpoint);
             Method derivedMethod = deriveMethod(derivedHandler, derivedEndpoint);
-            derivedMethod.invoke(derivedHandler, ctx);
+            derivedMethod.invoke(derivedHandler, ctx, msg);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }
 
+    /**
+     * Response with JSON content
+     * @param ctx current channel context from Netty
+     * @param outgoing string to send to client
+     * @return FullHttpResponse with JSON headers
+     */
     protected FullHttpResponse respond(ChannelHandlerContext ctx, String outgoing) {
         ByteBuf responseBytes = ctx.alloc().buffer();
         responseBytes.writeBytes(outgoing.getBytes());
@@ -35,5 +42,9 @@ public class Handler extends AnnotationHandlerUtils {
         response.headers().set(HttpHeaderNames.CONTENT_LENGTH, response.content().readableBytes());
         response.headers().set(HttpHeaderNames.CONNECTION, HttpHeaderValues.KEEP_ALIVE);
         return response;
+    }
+
+    protected String decodeMsg(FullHttpRequest msg) {
+        return msg.content().toString(CharsetUtil.UTF_8);
     }
 }
