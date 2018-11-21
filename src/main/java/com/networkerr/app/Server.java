@@ -1,5 +1,6 @@
 package com.networkerr.app;
 
+import com.networkerr.app.handlers.FallbackHandler;
 import com.networkerr.app.handlers.NetworkerrServerHandler;
 import com.networkerr.core.routers.Router;
 import io.netty.bootstrap.ServerBootstrap;
@@ -34,7 +35,8 @@ public class Server {
                                 .addFirst("idleStateHandler", new IdleStateHandler(60, 30, 0))
                                 .addLast(new HttpServerCodec())
                                 .addLast("aggregator", new HttpObjectAggregator(Short.MAX_VALUE))
-                                .addLast(new NetworkerrServerHandler());
+                                .addLast(new NetworkerrServerHandler())
+                                .addLast(new FallbackHandler());
                         }
                     });
             // Bind and accept incoming connections;

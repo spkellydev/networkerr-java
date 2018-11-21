@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 public abstract class AnnotationHandlerUtils extends SimpleChannelInboundHandler<FullHttpRequest> {
     private final Router router = new Router();
     private FullHttpRequest msg;
-    private ChannelHandlerContext ctx;
+    protected ChannelHandlerContext ctx;
 
     protected void initialize(FullHttpRequest msg, ChannelHandlerContext ctx) {
         this.msg = msg;

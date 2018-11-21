@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 class AnnotationRouter {
-    public static final FallbackDerivedEndpoint $404 = new FallbackDerivedEndpoint("/404", "GET", 404);
     public static final FallbackDerivedEndpoint $500 = new FallbackDerivedEndpoint("/500", "GET", 500);
     public static final FallbackDerivedEndpoint $302 = new FallbackDerivedEndpoint("/302", "GET", 302);
 
@@ -64,10 +63,11 @@ class AnnotationRouter {
                 return found[0];
             }
             if(found[0].getCode() == 302) {
+                System.out.println("302");
                 return $302;
             }
-            return $500;
+            return this.queryEndpoints("/403", "GET");
         }
-        return $404;
+        return this.queryEndpoints("/404", "GET");
     }
 }
