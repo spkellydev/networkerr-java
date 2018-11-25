@@ -1,5 +1,6 @@
 package com.networkerr.app;
 
+import com.networkerr.app.handlers.AuthHandler;
 import com.networkerr.app.handlers.FallbackHandler;
 import com.networkerr.app.handlers.NetworkerrServerHandler;
 import com.networkerr.core.routers.Router;
@@ -36,6 +37,7 @@ public class Server {
                                 .addLast(new HttpServerCodec())
                                 .addLast("aggregator", new HttpObjectAggregator(Short.MAX_VALUE))
                                 .addLast(new NetworkerrServerHandler())
+                                .addLast(new AuthHandler())
                                 .addLast(new FallbackHandler());
                         }
                     });
