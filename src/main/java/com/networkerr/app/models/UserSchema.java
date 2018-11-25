@@ -1,9 +1,25 @@
 package com.networkerr.app.models;
 
-import com.networkerr.core.dao.Schema;
+public class UserSchema {
+    long id;
+    private static String email;
+    private static String password;
+    private static UserSchema instance;
+    private UserSchema() {
+        instance = new UserSchema();
+    }
 
-public interface UserSchema extends Schema {
-    String email = null;
-    String password = null;
-    String validatePassword();
+    public static UserSchema initialize(String email, String password) {
+        setEmail(email);
+        setPassword(password);
+        return instance;
+    }
+
+    public static void setEmail(String userEmail) {
+        email = userEmail;
+    }
+
+    public static void setPassword(String userPassword) {
+        password = userPassword;
+    }
 }

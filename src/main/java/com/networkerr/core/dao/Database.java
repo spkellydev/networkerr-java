@@ -6,7 +6,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Database {
+final public class Database {
     private static Database instance = new Database();
     private Connection connection = null;
 
@@ -18,9 +18,10 @@ public class Database {
         }
     }
 
-    protected void connect(String database, String user, String password) {
+    public void connect(String database, String user, String password) {
         try {
             instance.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + database, user, password);
+            System.out.println("Connected to database");
         } catch (SQLException e) {
             if (e.getErrorCode() == 1049) {
                 Runtime rt = Runtime.getRuntime();

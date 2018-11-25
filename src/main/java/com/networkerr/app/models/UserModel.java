@@ -1,11 +1,16 @@
 package com.networkerr.app.models;
 
 import com.networkerr.core.dao.Model;
-
 import java.util.List;
 import java.util.Optional;
 
 public class UserModel extends Model<UserSchema> {
+    private UserSchema userSchema;
+    public UserModel(String email, String password) {
+        super("users", "email");
+        userSchema = UserSchema.initialize("spkellydev@email.com", "password");
+    }
+
     @Override
     protected Optional<UserSchema> get(long id) {
         return Optional.empty();
