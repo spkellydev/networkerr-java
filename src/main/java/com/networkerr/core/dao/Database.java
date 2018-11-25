@@ -54,6 +54,14 @@ final public class Database {
                 if (e.getErrorCode() == 1215) {
                     System.out.println("Foreign key can't be created, it doesn't seem the associated table is created");
                 }
+                if (e.getErrorCode() == 1146) {
+                    System.out.println("Table has not been created. Please update your table name or database.");
+                }
+                if (e.getErrorCode() == 1064) {
+                    System.out.println("Error in MySql Syntax");
+                    System.out.println(sql);
+                }
+                System.out.println(e.getErrorCode());
                 e.printStackTrace();
             }
         }

@@ -1,15 +1,41 @@
 package com.networkerr.core.dao;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.networkerr.core.routers.JsonMiddleware;
+import io.netty.handler.codec.http.FullHttpRequest;
+
+import java.io.IOException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Model<T> implements Schema {
+public abstract class Model<T> extends JsonMiddleware implements Schema {
     private String tableName;
     private String primaryKey;
     protected Database db = Database.getInstance();
     protected Model(String tableName, String primaryKey) {
         this.setTableName(tableName);
         this.setPrimaryKey(primaryKey);
+    }
+
+    protected JsonNode getMappable(FullHttpRequest msg) {
+        Type cls = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+        String payload = null;
+        Class<?> schema = null;
+        try {
+            schema = Class.forName(cls.getTypeName());
+            payload = this.mapToJson(msg, schema);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        assert payload != null;
+        try {
+            return this.mapper.readTree(payload);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     protected void execute(String sql) {
@@ -25,6 +51,8 @@ public abstract class Model<T> implements Schema {
     protected abstract void update(T t, String[] params);
 
     protected abstract void delete(T t);
+
+    protected abstract T schema();
 
     protected void setTableName(String tableName) {
         this.tableName = tableName;
