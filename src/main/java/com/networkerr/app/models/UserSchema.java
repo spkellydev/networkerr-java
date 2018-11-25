@@ -1,25 +1,31 @@
 package com.networkerr.app.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class UserSchema {
     long id;
-    private static String email;
-    private static String password;
-    private static UserSchema instance;
-    private UserSchema() {
-        instance = new UserSchema();
+    private  String email;
+    private  String password;
+    @JsonCreator
+    public UserSchema(@JsonProperty("email") String email, @JsonProperty("password") String password) {
+        this.email = email;
+        this.password = password;
     }
 
-    public static UserSchema initialize(String email, String password) {
-        setEmail(email);
-        setPassword(password);
-        return instance;
+    public void setEmail(String userEmail) {
+        this.email = userEmail;
     }
 
-    public static void setEmail(String userEmail) {
-        email = userEmail;
+    public void setPassword(String userPassword) {
+        this.password = userPassword;
     }
 
-    public static void setPassword(String userPassword) {
-        password = userPassword;
+    public String getEmail() {
+        return this.email;
+    }
+
+    public String getPassword() {
+        return this.password;
     }
 }

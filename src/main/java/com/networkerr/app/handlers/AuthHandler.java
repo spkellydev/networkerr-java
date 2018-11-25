@@ -8,10 +8,11 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
 
 public class AuthHandler extends Handler {
-    @HttpEndpoint(route = "/login", method = "POST", statusCode = 204)
+    @HttpEndpoint(route = "/register", method = "POST", statusCode = 204)
     public void handleLogin(ChannelHandlerContext ctx, FullHttpRequest msg) {
-        UserModel userModel = new UserModel("spkellydev@gmail.com", "password");
-        FullHttpResponse response = this.respond(ctx, "password");
+        UserModel user = new UserModel(msg);
+        user.save(user.schema());
+        FullHttpResponse response = this.respond(ctx, "p");
         ctx.writeAndFlush(response);
     }
 }
