@@ -38,23 +38,18 @@
                 <version>2.9.7</version>
             </dependency>
             <dependency>
-                <groupId>org.mongodb</groupId>
-                <artifactId>mongodb-driver-async</artifactId>
-                <version>3.8.2</version>
-            </dependency>
-            <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>RELEASE</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
-               <groupId>mysql</groupId>
-               <artifactId>mysql-connector-java</artifactId>
-               <version>5.1.17</version>
-               <type>jar</type>
-               <scope>compile</scope>
-           </dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>5.1.17</version>
+                <type>jar</type>
+                <scope>compile</scope>
+            </dependency>
         </dependencies>
 
 </project>

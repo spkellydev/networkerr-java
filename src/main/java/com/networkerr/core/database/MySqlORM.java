@@ -1,4 +1,4 @@
-package com.networkerr.core.dao;
+package com.networkerr.core.database;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -6,42 +6,49 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-final public class Database {
-    private static Database instance = new Database();
+/**
+ * MySqlORM should contain logic for finding SQL annotations, executing SQL queries and connecting to the database.
+ * @author Sean Kelly
+ * @apiNote MySql command line interface is expected for seeding to work.
+ */
+@Deprecated
+public class MySqlORM extends AnnotationSchema {
+    /**
+     * Singleton instance for ORM
+     */
+    private static MySqlORM instance = new MySqlORM();
+    /**
+     * MySQL Connection object
+     */
     private Connection connection = null;
-    private static int retryCount = 0;
 
-    private Database() {
+    /**
+     * Private constructor to generate the instance, find annotations at runtime start, and seed database with tables.
+     */
+    private MySqlORM() {
         try {
             Class.forName("com.mysql.jdbc.Driver");
+            this.getMapFromMethods();
+//            this.goRaw("root", "", "networkerr", this.getSeed());
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
     }
 
+    public static MySqlORM getInstance() {
+        return instance;
+    }
+
     public void connect(String database, String user, String password) {
-        System.out.println("...connecting...");
-        System.out.println(database);
-        System.out.println(user);
-        System.out.println(password);
         try {
-            instance.connection = DriverManager.getConnection("jdbc:mysql://192.168.99.100:32773/" + database, user, password);
-            System.out.println("Connected to database");
+            instance.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + database, user, password);
         } catch (SQLException e) {
-            retryCount++;
-            System.out.println(e.getMessage());
-            System.out.println(e.getSQLState());
-            System.out.println("Could not connect to database.");
-            System.out.println(String.format("Tried %d times", retryCount));
-            if(retryCount < 2) {
+            if(e.getErrorCode() == 1049) {
                 Runtime rt = Runtime.getRuntime();
                 try {
-                    System.out.println("Attempting raw connection");
                     Process pr = rt.exec("mysql -u " + user + " --password=\"" + password + "\"" + " -e\"create database " + database);
-                    pr.destroy();
                     this.connect(database, user, password);
                 } catch (IOException e1) {
-                    System.out.println(e.getMessage());
                     System.out.println("Could not create database automatically");
                     System.out.println("Check that " + database + " exists in your server");
                 }
@@ -49,8 +56,8 @@ final public class Database {
         }
     }
 
-    protected void execute(String sql) {
-        if (this.connection != null) {
+    public void execute(String sql) {
+        if(this.connection != null) {
             Statement statement = null;
             try {
                 statement = this.connection.createStatement();
@@ -63,17 +70,9 @@ final public class Database {
                 System.out.println(sql);
                 statement.execute(sql);
             } catch (SQLException e) {
-                if (e.getErrorCode() == 1215) {
+                if(e.getErrorCode() == 1215) {
                     System.out.println("Foreign key can't be created, it doesn't seem the associated table is created");
                 }
-                if (e.getErrorCode() == 1146) {
-                    System.out.println("Table has not been created. Please update your table name or database.");
-                }
-                if (e.getErrorCode() == 1064) {
-                    System.out.println("Error in MySql Syntax");
-                    System.out.println(sql);
-                }
-                System.out.println(e.getErrorCode());
                 e.printStackTrace();
             }
         }
@@ -81,7 +80,6 @@ final public class Database {
 
     /**
      * Connect to the MySql database via the command line, and execute the table seeder.
-     *
      * @param user
      * @param password
      * @param database
@@ -99,10 +97,5 @@ final public class Database {
         } catch (IOException e1) {
             System.out.println("Could not run automatically");
         }
-    }
-
-    public static Database getInstance() {
-        System.out.println("db instance passed");
-        return instance;
     }
 }

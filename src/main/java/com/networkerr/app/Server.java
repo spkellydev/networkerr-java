@@ -4,7 +4,6 @@ import com.networkerr.app.handlers.AuthHandler;
 import com.networkerr.app.handlers.FallbackHandler;
 import com.networkerr.app.handlers.NetworkerrServerHandler;
 import com.networkerr.core.dao.Database;
-import com.networkerr.core.routers.Router;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;

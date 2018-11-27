@@ -4,15 +4,12 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.FullHttpRequest;
-import io.netty.handler.codec.http.FullHttpResponse;
-
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public abstract class AnnotationHandlerUtils extends SimpleChannelInboundHandler<FullHttpRequest> {
     private final Router router = new Router();
     private FullHttpRequest msg;
-    protected ChannelHandlerContext ctx;
+    private ChannelHandlerContext ctx;
 
     protected void initialize(FullHttpRequest msg, ChannelHandlerContext ctx) {
         this.msg = msg;
@@ -28,11 +25,7 @@ public abstract class AnnotationHandlerUtils extends SimpleChannelInboundHandler
     protected Method deriveMethod(Object handler, DerivedEndpoint endpoint) {
         Method method = null;
         try {
-            method = (handler.getClass()).getMethod(
-                    endpoint.getHandlerMethod(),
-                    ChannelHandlerContext.class,
-                    FullHttpRequest.class
-            );
+            method = (handler.getClass()).getMethod(endpoint.getHandlerMethod(), ChannelHandlerContext.class);
         } catch (NoSuchMethodException e) {
             System.out.println("Could not find method");
             System.out.println(e.getMessage());
