@@ -1,2 +1,6 @@
 FROM mysql:5.7
+# initialize database if built on a fresh import
+# contains schemas to build tables
 COPY /db/init.sql /usr/src/init.sql
+# contains mysql database export if volumes have been lost
+COPY /db/backup.sql /usr/src/backup.sql
