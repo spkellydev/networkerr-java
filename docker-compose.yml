@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  db:
+    container_name: mysql
+    image: mysql:5.7
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile.mysql
+    volumes:
+      - /db/dump:/var/lib/mysql
+    command: --init-file /usr/src/init.sql
+    ports:
+      - "32773:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: "root"
+      MYSQL_DATABASE: "networkerr"
+  app:
+    working_dir: /app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: "networkerr_java:latest"
+    ports:
+      - "8080:8080"
+volumes:
+  db:
