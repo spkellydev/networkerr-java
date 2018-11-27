@@ -19,21 +19,30 @@ final public class Database {
     }
 
     public void connect(String database, String user, String password) {
+        System.out.println("...connecting...");
+        System.out.println(database);
+        System.out.println(user);
+        System.out.println(password);
         try {
-            instance.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + database, user, password);
+            instance.connection = DriverManager.getConnection("jdbc:mysql://192.168.99.100:32773/" + database, user, password);
             System.out.println("Connected to database");
         } catch (SQLException e) {
-            if (e.getErrorCode() == 1049) {
+            System.out.println(e.getMessage());
+            System.out.println(e.getSQLState());
+            System.out.println("Could not connect right away");
+//            if (e.getErrorCode() == 1049) {
                 Runtime rt = Runtime.getRuntime();
                 try {
+                    System.out.println("Attempting raw connection");
                     Process pr = rt.exec("mysql -u " + user + " --password=\"" + password + "\"" + " -e\"create database " + database);
                     pr.destroy();
                     this.connect(database, user, password);
                 } catch (IOException e1) {
+                    System.out.println(e.getMessage());
                     System.out.println("Could not create database automatically");
                     System.out.println("Check that " + database + " exists in your server");
                 }
-            }
+//            }
         }
     }
 
@@ -90,6 +99,7 @@ final public class Database {
     }
 
     public static Database getInstance() {
+        System.out.println("db instance passed");
         return instance;
     }
 }
