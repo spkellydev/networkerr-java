@@ -4,6 +4,6 @@ FROM java:8
 # add that IP to hosts file
 EXPOSE 8080
 # add artifact to app directory
-ADD /out/artifacts/networkerr_jar/networkerr.jar /app/app.jar
+ADD target/networkerr-1.0-SNAPSHOT-jar-with-dependencies.jar /app/app.jar
 # start server
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+CMD ["java", "-jar", "/app/app.jar"]
