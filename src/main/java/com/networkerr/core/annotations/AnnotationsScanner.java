@@ -22,7 +22,7 @@ public abstract class AnnotationsScanner {
         this.reflections = new Reflections(
           new ConfigurationBuilder().setUrls(
                   ClasspathHelper.forPackage(namespace)
-          ).setScanners(new MethodAnnotationsScanner()).setScanners(new SubTypesScanner(false))
+          ).setScanners(new MethodAnnotationsScanner())
         );
     }
 

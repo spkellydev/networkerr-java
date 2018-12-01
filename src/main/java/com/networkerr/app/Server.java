@@ -4,6 +4,7 @@ import com.networkerr.app.handlers.AuthHandler;
 import com.networkerr.app.handlers.FallbackHandler;
 import com.networkerr.app.handlers.NetworkerrServerHandler;
 import com.networkerr.core.dao.Database;
+import com.networkerr.core.routers.Router;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -20,6 +21,7 @@ public class Server {
         System.out.println("Server running on port 8080");
         Database db = Database.getInstance();
         db.connect("networkerr", "root", "");
+        Router.getInstance().initialize();
         new Server().run();
     }
 
