@@ -3,6 +3,7 @@ package com.networkerr.app;
 import com.networkerr.app.handlers.AuthHandler;
 import com.networkerr.app.handlers.FallbackHandler;
 import com.networkerr.app.handlers.NetworkerrServerHandler;
+import com.networkerr.app.handlers.UptimeHandler;
 import com.networkerr.core.dao.Database;
 import com.networkerr.core.routers.Router;
 import io.netty.bootstrap.ServerBootstrap;
@@ -42,7 +43,8 @@ public class Server {
                                 .addLast("aggregator", new HttpObjectAggregator(Short.MAX_VALUE))
                                 .addLast(new NetworkerrServerHandler())
                                 .addLast(new AuthHandler())
-                                .addLast(new FallbackHandler());
+                                .addLast(new FallbackHandler())
+                                .addLast(new UptimeHandler());
                         }
                     });
             // Bind and accept incoming connections;
