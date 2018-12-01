@@ -16,6 +16,11 @@ public class Handler extends AnnotationHandlerUtils {
     }
 
     @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) {
+        ctx.flush();
+    }
+
+    @Override
     protected void channelRead0(ChannelHandlerContext ctx, FullHttpRequest msg) throws Exception {
         this.initialize(msg, ctx);
         this.validateContext();
@@ -25,7 +30,8 @@ public class Handler extends AnnotationHandlerUtils {
             Method derivedMethod = deriveMethod(derivedHandler, derivedEndpoint);
             derivedMethod.invoke(derivedHandler, ctx, msg);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Error");
+            e.printStackTrace();
         }
     }
 
@@ -47,5 +53,10 @@ public class Handler extends AnnotationHandlerUtils {
 
     protected String decodeMsg(FullHttpRequest msg) {
         return msg.content().toString(CharsetUtil.UTF_8);
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+        ctx.close();
     }
 }

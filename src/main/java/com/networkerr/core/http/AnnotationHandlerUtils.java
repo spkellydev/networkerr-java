@@ -1,10 +1,13 @@
 package com.networkerr.core.http;
 import com.networkerr.core.routers.Router;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.DecoderResult;
 import io.netty.handler.codec.http.FullHttpRequest;
 import io.netty.handler.codec.http.FullHttpResponse;
+import io.netty.handler.codec.http.HttpUtil;
 
 import java.lang.reflect.Method;
 
@@ -20,7 +23,10 @@ public abstract class AnnotationHandlerUtils extends SimpleChannelInboundHandler
 
     protected void validateContext() {
         if(this.msg.decoderResult() != DecoderResult.SUCCESS) {
-            this.ctx.close();
+            this.closeBadFuture();
+        }
+        if(!HttpUtil.isKeepAlive(this.msg)) {
+            this.closeBadFuture();
         }
     }
 
@@ -56,5 +62,10 @@ public abstract class AnnotationHandlerUtils extends SimpleChannelInboundHandler
 
     protected DerivedEndpoint deriveEndpoint() {
         return this.router.getRoute(this.msg.uri(), this.msg.method().toString());
+    }
+
+    private void closeBadFuture() {
+        ChannelFuture future = this.ctx.writeAndFlush(this.msg);
+        future.addListener(ChannelFutureListener.CLOSE);
     }
 }
