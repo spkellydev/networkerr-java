@@ -1,5 +1,6 @@
 package com.networkerr.core.routers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.networkerr.core.dao.Model;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -20,6 +21,16 @@ public class JsonMiddleware {
             e.printStackTrace();
         }
         assert response != null;
+        return response;
+    }
+
+    protected String writeModelAsJson(Object model) {
+        String response = "";
+        try {
+            response = this.mapper.writeValueAsString(model);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
         return response;
     }
 }

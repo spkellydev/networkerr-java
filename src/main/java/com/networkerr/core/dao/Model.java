@@ -19,6 +19,9 @@ public abstract class Model<T> extends JsonMiddleware implements Schema {
         this.setPrimaryKey(primaryKey);
     }
 
+    protected String jsonStringify(Object model) {
+        return this.writeModelAsJson(model);
+    }
     protected JsonNode getMappable(FullHttpRequest msg) {
         Type cls = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         String payload = null;
@@ -67,5 +70,9 @@ public abstract class Model<T> extends JsonMiddleware implements Schema {
 
     protected String getPrimaryKey() {
         return this.primaryKey;
+    }
+
+    public String toString() {
+        return this.jsonStringify(this);
     }
 }

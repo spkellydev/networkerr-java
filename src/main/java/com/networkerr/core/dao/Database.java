@@ -25,7 +25,8 @@ final public class Database {
         System.out.println(user);
         System.out.println(password);
         try {
-            instance.connection = DriverManager.getConnection("jdbc:mysql://192.168.99.100:32773/" + database, user, password);
+//            instance.connection = DriverManager.getConnection("jdbc:mysql://192.168.99.100:32773/" + database, user, password);
+            instance.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + database, user, password);
             System.out.println("Connected to database");
         } catch (SQLException e) {
             retryCount++;

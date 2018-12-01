@@ -19,7 +19,7 @@ public class Server {
     public static void main(String[] args) {
         System.out.println("Server running on port 8080");
         Database db = Database.getInstance();
-        db.connect("networkerr", "root", "root");
+        db.connect("networkerr", "root", "");
         new Server().run();
     }
 
