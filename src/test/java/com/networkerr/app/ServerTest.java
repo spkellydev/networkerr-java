@@ -33,7 +33,7 @@ public class ServerTest {
             try {
                 Server.main(new String[] {"dev"});
             } catch (Exception e) {
-                System.out.println("Shutting down, server failed");
+                System.out.println("Server staged for shutdown");
             }
         });
         thread.start();

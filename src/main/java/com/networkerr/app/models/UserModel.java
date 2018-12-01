@@ -1,5 +1,6 @@
 package com.networkerr.app.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.networkerr.core.dao.Model;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -10,7 +11,7 @@ import java.util.Optional;
 public class UserModel extends Model<UserSchema> {
     private UserSchema userSchema;
     public UserModel(String email, String password) {
-        super("users", "email");
+        super( "users", "email");
         userSchema = new UserSchema("spkellydev@email.com", "password");
     }
 
@@ -49,6 +50,10 @@ public class UserModel extends Model<UserSchema> {
     @Override
     protected void delete(UserSchema userSchema) {
 
+    }
+
+    public String writeAsString() {
+        return this.jsonStringify(userSchema);
     }
 
     public UserSchema schema() {

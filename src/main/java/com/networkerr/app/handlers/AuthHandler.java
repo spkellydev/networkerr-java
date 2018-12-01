@@ -12,7 +12,8 @@ public class AuthHandler extends Handler {
     public void handleLogin(ChannelHandlerContext ctx, FullHttpRequest msg) {
         UserModel user = new UserModel(msg);
         user.save(user.schema());
-        FullHttpResponse response = this.respond(ctx, "p");
+
+        FullHttpResponse response = this.respond(ctx, user.writeAsString());
         ctx.writeAndFlush(response);
     }
 }

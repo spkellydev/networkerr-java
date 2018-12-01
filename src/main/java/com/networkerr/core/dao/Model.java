@@ -1,5 +1,6 @@
 package com.networkerr.core.dao;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.networkerr.core.routers.JsonMiddleware;
 import io.netty.handler.codec.http.FullHttpRequest;
@@ -19,9 +20,6 @@ public abstract class Model<T> extends JsonMiddleware implements Schema {
         this.setPrimaryKey(primaryKey);
     }
 
-    protected String jsonStringify(Object model) {
-        return this.writeModelAsJson(model);
-    }
     protected JsonNode getMappable(FullHttpRequest msg) {
         Type cls = ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
         String payload = null;
@@ -34,11 +32,21 @@ public abstract class Model<T> extends JsonMiddleware implements Schema {
         }
         assert payload != null;
         try {
-            return this.mapper.readTree(payload);
+            return mapper.readTree(payload);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    protected String jsonStringify(Object schema) {
+        String result = "";
+        try {
+            result = mapper.writeValueAsString(schema);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
     protected void execute(String sql) {
@@ -70,9 +78,5 @@ public abstract class Model<T> extends JsonMiddleware implements Schema {
 
     protected String getPrimaryKey() {
         return this.primaryKey;
-    }
-
-    public String toString() {
-        return this.jsonStringify(this);
     }
 }
