@@ -1,10 +1,7 @@
 package com.networkerr.core.dao;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 final public class Database {
     private static Database instance = new Database();
@@ -50,6 +47,23 @@ final public class Database {
                 }
             }
         }
+    }
+
+    protected ResultSet select(String column, String table, String condition) {
+        if (this.connection != null) {
+            Statement statement = null;
+            ResultSet rs = null;
+            try {
+                statement = this.connection.createStatement();
+                final String query = String.format("select * from %s where %s='%s'", table, column, condition);
+                rs = statement.executeQuery(query);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            assert rs != null;
+            return rs;
+        }
+        return null;
     }
 
     protected void execute(String sql) {

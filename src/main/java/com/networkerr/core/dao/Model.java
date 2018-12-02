@@ -8,6 +8,7 @@ import io.netty.handler.codec.http.FullHttpRequest;
 import java.io.IOException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.sql.ResultSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -47,6 +48,10 @@ public abstract class Model<T> extends JsonMiddleware implements Schema {
             e.printStackTrace();
         }
         return result;
+    }
+
+    protected ResultSet select(String column, String table, String condition) {
+        return this.db.select(column, table, condition);
     }
 
     protected void execute(String sql) {
