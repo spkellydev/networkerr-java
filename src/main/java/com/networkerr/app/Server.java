@@ -20,7 +20,10 @@ import io.netty.handler.timeout.IdleStateHandler;
 public class Server {
     public static void main(String[] args) {
         System.out.println("Server running on port 8080");
-        Database db = Database.getInstance();
+        AppProperties.env("local");
+        AppProperties.setProps();
+        AppProperties.prop("host");
+        Database db = Database.getInstance(AppProperties.prop("host"), AppProperties.prop("db_port"));
         db.connect("networkerr", "root", "");
         Router.getInstance().initialize();
         new Server().run();
@@ -48,7 +51,8 @@ public class Server {
                         }
                     });
             // Bind and accept incoming connections;
-            ChannelFuture f = b.bind(8080).sync();
+            int port = Integer.parseInt(AppProperties.prop("port"));
+            ChannelFuture f = b.bind(port).sync();
             // Wait until socket has closed
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {

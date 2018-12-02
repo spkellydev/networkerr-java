@@ -10,6 +10,8 @@ final public class Database {
     private static Database instance = new Database();
     private Connection connection = null;
     private static int retryCount = 0;
+    private static String dbHost;
+    private static String dbPort;
 
     private Database() {
         try {
@@ -25,8 +27,8 @@ final public class Database {
         System.out.println(user);
         System.out.println(password);
         try {
-//            instance.connection = DriverManager.getConnection("jdbc:mysql://192.168.99.100:32773/" + database, user, password);
-            instance.connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + database, user, password);
+            final String mysqlLoc = String.format("jdbc:mysql://%s:%s/", dbHost, dbPort);
+            instance.connection = DriverManager.getConnection(mysqlLoc + database, user, password);
             System.out.println("Connected to database");
         } catch (SQLException e) {
             retryCount++;
@@ -102,8 +104,13 @@ final public class Database {
         }
     }
 
+    public static Database getInstance(String host, String port) {
+        dbHost = host;
+        dbPort = port;
+        return instance;
+    }
+
     public static Database getInstance() {
-        System.out.println("db instance passed");
         return instance;
     }
 }

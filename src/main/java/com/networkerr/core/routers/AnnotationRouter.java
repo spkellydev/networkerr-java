@@ -1,5 +1,6 @@
 package com.networkerr.core.routers;
 
+import com.networkerr.app.AppProperties;
 import com.networkerr.core.annotations.AnnotationsScanner;
 import com.networkerr.core.annotations.HttpEndpoint;
 import com.networkerr.core.http.DerivedEndpoint;
@@ -17,7 +18,9 @@ class AnnotationRouter extends AnnotationsScanner {
     private ArrayList<DerivedEndpoint> endpoints = new ArrayList<>();
 
     protected void getMapFromMethods() {
-        this.findAnnotations("com.networkerr.app", HttpEndpoint.class);
+        AppProperties.setProps();
+        final String namespace = AppProperties.prop("namespace");
+        this.findAnnotations(namespace, HttpEndpoint.class);
         this.methods = this.getMethods(HttpEndpoint.class);
         this.methods.forEach(method -> {
             for (Annotation anno: method.getAnnotations()) {
