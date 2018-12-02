@@ -19,6 +19,9 @@ CREATE TABLE IF NOT EXISTS companies(
 );
 
 CREATE TABLE IF NOT EXISTS users(
-	`email` VARCHAR(255),
-  `password` VARCHAR(255)
+	userId INTEGER NOT NULL AUTO_INCREMENT,
+	email VARCHAR(255) NOT NULL,
+    `password` VARCHAR(255) NOT NULL,
+    salt VARCHAR(255) NOT NULL,
+    PRIMARY KEY (userId)
 );
